@@ -33,3 +33,8 @@ export function selectionSort(unsortedArray) {
   }
   return arr;
 }
+
+export default {
+  bubbleSort,
+  selectionSort,
+};

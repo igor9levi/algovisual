@@ -1,7 +1,9 @@
 import React from 'react';
+import { bubbleSort } from '../../utils';
+import unsortedArray from '../../const';
 
 export default () => {
-  return (
-    <div>Sorting chart...</div>
-  );
-}
+  const result = bubbleSort(unsortedArray);
+  console.log(result);
+  return <div>Sorting chart...</div>;
+};

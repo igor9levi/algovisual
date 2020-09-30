@@ -1,1 +1,1 @@
-export { bubbleSort, selectionSort } from './utils';
+export { bubbleSort, selectionSort, sleep } from './utils';

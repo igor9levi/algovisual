@@ -1,5 +1,5 @@
 // https://khan4019.github.io/front-end-Interview-Questions/sort.html
-export function bubbleSort(unsortedArray) {
+export function* bubbleSort(unsortedArray) {
   const arr = unsortedArray;
   const len = arr.length;
 
@@ -10,12 +10,13 @@ export function bubbleSort(unsortedArray) {
         arr[j - 1] = arr[j];
         arr[j] = temp;
       }
+      yield arr;
     }
   }
   return arr;
 }
 
-export function selectionSort(unsortedArray) {
+export function* selectionSort(unsortedArray) {
   const arr = unsortedArray;
   let minIdx;
   let temp;
@@ -30,11 +31,17 @@ export function selectionSort(unsortedArray) {
     temp = arr[i];
     arr[i] = arr[minIdx];
     arr[minIdx] = temp;
+    yield arr;
   }
   return arr;
 }
 
+export const sleep = (milliseconds = 200) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
 export default {
   bubbleSort,
   selectionSort,
+  sleep,
 };

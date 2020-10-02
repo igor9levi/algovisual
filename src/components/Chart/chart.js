@@ -26,10 +26,15 @@ export default class Chart extends React.Component {
         clearInterval(intervalId);
         return;
       }
-      if (!isEmpty(this.chartReference.current.chartInstance.config)) {
+      if (
+        !isEmpty(
+          this.chartReference?.current?.chartInstance?.config?.data
+            ?.datasets?.[0]?.data
+        )
+      ) {
         console.log(
-          this.chartReference.current.chartInstance.config.data.datasets[0]
-            .data[25]
+          this.chartReference?.current?.chartInstance?.config?.data
+            ?.datasets?.[0]?.data[25]
         );
         this.chartReference.current.chartInstance.config.data.datasets[0].data = value;
         this.chartReference.current.chartInstance.update();

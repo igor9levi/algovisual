@@ -16,6 +16,65 @@ export function* bubbleSort(unsortedArray) {
   return arr;
 }
 
+/** *********************************
+ * mergeSort
+ */
+function merge(left, right) {
+  const result = [];
+  const lLen = left.length;
+  const rLen = right.length;
+  let l = 0;
+  let r = 0;
+  while (l < lLen && r < rLen) {
+    if (left[l] < right[r]) {
+      result.push(left[l++]);
+    } else {
+      result.push(right[r++]);
+    }
+  }
+  // remaining part needs to be addred to the result
+  return result.concat(left.slice(l)).concat(right.slice(r));
+}
+
+export function mergeSort(arr) {
+  const len = arr.length;
+  if (len < 2) return arr;
+  const mid = Math.floor(len / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
+  // send left and right to the mergeSort to broke it down into pieces
+  // then merge those
+  return merge(mergeSort(left), mergeSort(right));
+  // yield merge(mergeSort(left), mergeSort(right));
+}
+
+/** *********************************
+ * insertionSort
+ */
+
+export function* insertionSort(unsortedArray) {
+  const arr = unsortedArray;
+  let i;
+  const len = arr.length;
+  let el;
+  let j;
+
+  for (i = 1; i < len; i += 1) {
+    el = arr[i];
+    j = i;
+
+    while (j > 0 && arr[j - 1] > el) {
+      arr[j] = arr[j - 1];
+      j -= 1;
+      yield arr;
+    }
+
+    arr[j] = el;
+  }
+
+  return arr;
+}
+
 export function* selectionSort(unsortedArray) {
   const arr = unsortedArray;
   let minIdx;

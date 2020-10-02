@@ -1,73 +1,60 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { isEmpty } from 'lodash';
-import { bubbleSort, sleep } from '../../utils';
+import * as sortAlgoritms from '../../utils';
 import unsortedArray from '../../const';
 
 export default class Chart extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
     this.chartReference = React.createRef();
+
     this.state = {
       arrayToSort: [],
       iterator: null,
-      // barData: {
-      //   labels: this.props.data,
-      //   datasets: [
-      //     {
-      //       label: this.props.label,
-      //       data: unsortedArray,
-      //       backgroundColor: 'blue',
-      //       borderColor: 'blue',
-      //       borderWidth: 1,
-      //     },
-      //   ],
-      // },
     };
-    // this.iterator = null;
-  }
-
-  async componentDidUpdate() {
-    await sleep(5);
-    const result = this.state.iterator.next();
-    console.log(result);
-    console.log(this.state.arrayToSort);
-    if (!result.done) {
-      console.log('SETTING STATE');
-      this.setState({
-        arrayToSort: [...result.value],
-        // barData: {
-        //   labels: this.props.data,
-        //   datasets: [
-        //     {
-        //       label: this.props.label,
-        //       data: result.value,
-        //       backgroundColor: 'blue',
-        //       borderColor: 'blue',
-        //       borderWidth: 1,
-        //     },
-        //   ],
-        // },
-      });
-    }
   }
 
   run() {
-    const iterator = bubbleSort(unsortedArray);
-    this.setState({
-      iterator,
-    });
+    const iterator = sortAlgoritms.insertionSort(unsortedArray);
+
+    const intervalId = setInterval(() => {
+      const { value, done } = iterator.next();
+
+      if (done) {
+        clearInterval(intervalId);
+        return;
+      }
+      if (!isEmpty(this.chartReference.current.chartInstance.config)) {
+        console.log(
+          this.chartReference.current.chartInstance.config.data.datasets[0]
+            .data[25]
+        );
+        this.chartReference.current.chartInstance.config.data.datasets[0].data = value;
+        this.chartReference.current.chartInstance.update();
+      }
+    }, 1);
   }
 
   render() {
     const { data, label } = this.props;
+    const { arrayToSort } = this.state;
     console.log('in render: ', this.state.arrayToSort);
     const options = {
+      animation: {
+        easing: 'easeOutQuart',
+      },
       maintainAspectRatio: false,
       scales: {
         xAxes: [
           {
             ticks: {
+              callback(value, index, values) {
+                return '';
+              },
+            },
+            scaleLabel: {
               display: false,
             },
           },
@@ -80,9 +67,7 @@ export default class Chart extends React.Component {
       datasets: [
         {
           label,
-          data: !isEmpty(this.state.arrayToSort)
-            ? this.state.arrayToSort
-            : data,
+          data: !isEmpty(arrayToSort) ? arrayToSort : data,
           backgroundColor: 'blue',
           borderColor: 'blue',
           borderWidth: 1,
@@ -93,20 +78,16 @@ export default class Chart extends React.Component {
     return (
       <div>
         <Bar
+          key={Math.random()}
           ref={this.chartReference}
           data={barData}
-          width={50}
-          height={500}
+          width={100}
+          height={100}
           options={options}
-          redraw
         />
         <button type="button" onClick={() => this.run()}>
           Run
         </button>
-        <div>
-          Counter:
-          {this.state.arrayToSort[1]}
-        </div>
       </div>
     );
   }

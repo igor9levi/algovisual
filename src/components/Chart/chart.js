@@ -16,33 +16,42 @@ export default function Chart({ data, algorithm }) {
   const initialData = [...data];
   const chartReference = React.useRef();
 
-  function run() {
-    const iterator = sortAlgoritms[algorithm](data);
-
-    const intervalId = setInterval(() => {
-      const { value, done } = iterator.next();
-
-      if (done) {
-        clearInterval(intervalId);
-        return;
-      }
-
-      if (
-        !isEmpty(
-          chartReference?.current?.chartInstance?.config?.data?.datasets?.[0]
-            ?.data
-        )
-      ) {
-        console.log(value);
-        chartReference.current.chartInstance.config.data.datasets[0].data = value;
-        chartReference.current.chartInstance.update();
-      }
-    }, 1);
-  }
+  React.useEffect(() => {
+    console.log(chartReference);
+  }, []);
 
   // function run() {
-  //   sortAlgoritms[algorithm](data, chartReference.current.chartInstance);
+  //   const iterator = sortAlgoritms[algorithm](data);
+
+  //   const intervalId = setInterval(() => {
+  //     const { value, done } = iterator.next();
+
+  //     if (done) {
+  //       clearInterval(intervalId);
+  //       return;
+  //     }
+
+  //     if (
+  //       !isEmpty(
+  //         chartReference?.current?.chartInstance?.config?.data?.datasets?.[0]
+  //           ?.data
+  //       )
+  //     ) {
+  //       console.log(value);
+  //       chartReference.current.chartInstance.config.data.datasets[0].data = value;
+  //       chartReference.current.chartInstance.update();
+  //     }
+  //   }, 1);
   // }
+
+  function run() {
+    sortAlgoritms[algorithm]({
+      arr: data,
+      left: 0,
+      right: data.length - 1,
+      chart: chartReference.current.chartInstance,
+    });
+  }
 
   function resetMe() {
     if (

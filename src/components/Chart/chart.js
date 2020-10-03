@@ -1,23 +1,23 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import * as sortAlgoritms from '../../utils';
-import unsortedArray from '../../const';
 
-export default class Chart extends React.Component {
-  constructor() {
-    super();
+const algorthms = {
+  bubbleSort: 'Bubble Sort',
+  insertionSort: 'Instertion Sort',
+  selectionSort: 'Selection Sort',
+  mergeSort: 'Merge Sort',
+  quickSort: 'Quick Sort',
+};
 
-    this.chartReference = React.createRef();
+export default function Chart({ data, algorithm }) {
+  const initialData = [...data];
+  const chartReference = React.useRef();
 
-    this.state = {
-      arrayToSort: [],
-      iterator: null,
-    };
-  }
-
-  run() {
-    const iterator = sortAlgoritms.insertionSort(unsortedArray);
+  function run() {
+    const iterator = sortAlgoritms[algorithm](data);
 
     const intervalId = setInterval(() => {
       const { value, done } = iterator.next();
@@ -26,74 +26,98 @@ export default class Chart extends React.Component {
         clearInterval(intervalId);
         return;
       }
+
       if (
         !isEmpty(
-          this.chartReference?.current?.chartInstance?.config?.data
-            ?.datasets?.[0]?.data
+          chartReference?.current?.chartInstance?.config?.data?.datasets?.[0]
+            ?.data
         )
       ) {
-        console.log(
-          this.chartReference?.current?.chartInstance?.config?.data
-            ?.datasets?.[0]?.data[25]
-        );
-        this.chartReference.current.chartInstance.config.data.datasets[0].data = value;
-        this.chartReference.current.chartInstance.update();
+        console.log(value);
+        chartReference.current.chartInstance.config.data.datasets[0].data = value;
+        chartReference.current.chartInstance.update();
       }
     }, 1);
   }
 
-  render() {
-    const { data, label } = this.props;
-    const { arrayToSort } = this.state;
-    console.log('in render: ', this.state.arrayToSort);
-    const options = {
-      animation: {
-        easing: 'easeOutQuart',
+  // function run() {
+  //   sortAlgoritms[algorithm](data, chartReference.current.chartInstance);
+  // }
+
+  function resetMe() {
+    if (
+      !isEmpty(
+        chartReference?.current?.chartInstance?.config?.data?.datasets?.[0]
+          ?.data
+      )
+    ) {
+      chartReference.current.chartInstance.config.data.datasets[0].data = initialData;
+      chartReference.current.chartInstance.update();
+    }
+  }
+
+  const options = {
+    animation: {
+      easing: 'easeOutQuart',
+    },
+    legend: {
+      labels: {
+        boxWidth: 0,
       },
-      maintainAspectRatio: false,
-      scales: {
-        xAxes: [
-          {
-            ticks: {
-              callback(value, index, values) {
-                return '';
-              },
-            },
-            scaleLabel: {
-              display: false,
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            callback() {
+              return '';
             },
           },
-        ],
-      },
-    };
-
-    const barData = {
-      labels: data,
-      datasets: [
-        {
-          label,
-          data: !isEmpty(arrayToSort) ? arrayToSort : data,
-          backgroundColor: 'blue',
-          borderColor: 'blue',
-          borderWidth: 1,
+          gridLines: {
+            display: false,
+          },
+          scaleLabel: {
+            display: false,
+          },
         },
       ],
-    };
+    },
+  };
 
-    return (
-      <div>
-        <Bar
-          key={Math.random()}
-          ref={this.chartReference}
-          data={barData}
-          width={100}
-          height={100}
-          options={options}
-        />
-        <button type="button" onClick={() => this.run()}>
-          Run
-        </button>
-      </div>
-    );
-  }
+  const barData = {
+    labels: data,
+    datasets: [
+      {
+        label: algorthms[algorithm],
+        data,
+        backgroundColor: 'blue',
+        borderColor: 'blue',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  return (
+    <div className="chart">
+      <Bar
+        key={Math.random()}
+        ref={chartReference}
+        data={barData}
+        options={options}
+      />
+      <button className="btn" type="button" onClick={() => run()}>
+        Run
+      </button>
+      <button className="btn" type="button" onClick={() => resetMe(true)}>
+        Reset
+      </button>
+    </div>
+  );
 }
+
+Chart.propTypes = {
+  data: PropTypes.arrayOf(Number).isRequired,
+  algorithm: PropTypes.string.isRequired,
+};

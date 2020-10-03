@@ -37,3 +37,22 @@
     transform: rotate(360deg);
   }
 }
+
+.chart {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+}
+
+.btn {
+  margin: 10px;
+}
+
+.btn-reset-all {
+  width: 70px;
+  height: 30px;
+  border-radius: 5px;
+  margin-top: 30px;
+  background-color: rgb(116, 219, 116);
+  border-color: darkgreen;
+}

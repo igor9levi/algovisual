@@ -1,4 +1,9 @@
 // https://khan4019.github.io/front-end-Interview-Questions/sort.html
+
+/** *********************************
+ * bubbleSort
+ * @param {*} unsortedArray
+ */
 export function* bubbleSort(unsortedArray) {
   const arr = unsortedArray;
   const len = arr.length;
@@ -18,6 +23,8 @@ export function* bubbleSort(unsortedArray) {
 
 /** *********************************
  * mergeSort
+ * @param {*} left
+ * @param {*} right
  */
 function merge(left, right) {
   const result = [];
@@ -50,8 +57,8 @@ export function mergeSort(arr) {
 
 /** *********************************
  * insertionSort
+ * @param {*} unsortedArray
  */
-
 export function* insertionSort(unsortedArray) {
   const arr = unsortedArray;
   let i;
@@ -63,6 +70,7 @@ export function* insertionSort(unsortedArray) {
     el = arr[i];
     j = i;
 
+    // TODO: Check this el
     while (j > 0 && arr[j - 1] > el) {
       arr[j] = arr[j - 1];
       j -= 1;
@@ -75,6 +83,10 @@ export function* insertionSort(unsortedArray) {
   return arr;
 }
 
+/** *********************************
+ *
+ * @param {selectionSort} unsortedArray
+ */
 export function* selectionSort(unsortedArray) {
   const arr = unsortedArray;
   let minIdx;
@@ -95,12 +107,57 @@ export function* selectionSort(unsortedArray) {
   return arr;
 }
 
+/** *********************************
+ *  Quick Sort
+ * @param {*} arr
+ * @param {*} left
+ * @param {*} right
+ */
+function swap(arr, i, j) {
+  const temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
+}
+
+function partition(arr, pivot, left, right) {
+  const pivotValue = arr[pivot];
+  let partitionIndex = left;
+
+  for (let i = left; i < right; i += 1) {
+    if (arr[i] < pivotValue) {
+      swap(arr, i, partitionIndex);
+      partitionIndex += 1;
+    }
+  }
+  swap(arr, right, partitionIndex);
+  return partitionIndex;
+}
+
+export function* quickSort(arr, left, right) {
+  const len = arr.length;
+  let pivot;
+  let partitionIndex;
+
+  if (left < right) {
+    pivot = right;
+    partitionIndex = partition(arr, pivot, left, right);
+    yield arr;
+
+    // sort left and right
+    quickSort(arr, left, partitionIndex - 1);
+    quickSort(arr, partitionIndex + 1, right);
+  }
+  return arr;
+}
+
 export const sleep = (milliseconds = 200) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
 export default {
   bubbleSort,
+  insertionSort,
   selectionSort,
+  mergeSort,
   sleep,
 };

@@ -139,7 +139,7 @@ function swap(arr, i, j) {
   arr[j] = temp;
 }
 
-async function partition(arr, pivot, left, right, chart) {
+function partition(arr, pivot, left, right, chart) {
   const pivotValue = arr[pivot];
   let partitionIndex = left;
 

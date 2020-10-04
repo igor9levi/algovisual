@@ -15,6 +15,10 @@ export default function Chart({ arrayToSort, algorithm }) {
   const chartReference = React.useRef();
   const [data, setData] = React.useState([...arrayToSort]);
 
+  React.useEffect(() => {
+    setData([...arrayToSort]);
+  }, [arrayToSort]);
+
   function run() {
     sortAlgoritms[algorithm]({
       arr: data,

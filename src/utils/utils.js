@@ -133,10 +133,14 @@ export async function mergeSort({ arr, chart }) {
  * @param {*} left
  * @param {*} right
  */
-function swap(arr, i, j) {
+async function swap(arr, i, j, chart) {
   const temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
+
+  chart.config.data.datasets[0].data = arr;
+  chart.update();
+  await sleep(2);
 }
 
 function partition(arr, pivot, left, right, chart) {
@@ -145,11 +149,11 @@ function partition(arr, pivot, left, right, chart) {
 
   for (let i = left; i < right; i += 1) {
     if (arr[i] < pivotValue) {
-      swap(arr, i, partitionIndex);
+      swap(arr, i, partitionIndex, chart);
       partitionIndex += 1;
     }
   }
-  swap(arr, right, partitionIndex);
+  swap(arr, right, partitionIndex, chart);
   return partitionIndex;
 }
 
@@ -165,8 +169,7 @@ export function quickSort({ arr, left, right, chart }) {
     quickSort({ arr, left, right: partitionIndex - 1, chart });
     quickSort({ arr, left: partitionIndex + 1, right, chart });
   }
-  chart.config.data.datasets[0].data = arr;
-  chart.update();
+
   return arr;
 }
 

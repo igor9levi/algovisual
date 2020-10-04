@@ -13,8 +13,8 @@ const algos = [
 function App() {
   function createArray() {
     const unsortedArray = [];
-    for (let i = 0; i < 50; i += 1) {
-      unsortedArray.push(Math.floor(Math.random() * 60 + 1));
+    for (let i = 0; i < 70; i += 1) {
+      unsortedArray.push(Math.floor(Math.random() * 80 + 1));
     }
     return unsortedArray;
   }

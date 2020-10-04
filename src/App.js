@@ -25,7 +25,7 @@ function App() {
       <header className="App-header">Sorting algorithm comparison</header>
       <main>
         {algos.map((algo, index) => (
-          <Chart key={index} data={data} algorithm={algo} />
+          <Chart key={index} arrayToSort={data} algorithm={algo} />
         ))}
       </main>
       <button

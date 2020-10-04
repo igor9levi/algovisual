@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 import * as sortAlgoritms from '../../utils';
 
 const algorthms = {
@@ -12,13 +12,14 @@ const algorthms = {
   quickSort: 'Quick Sort',
 };
 
-export default function Chart({ data, algorithm }) {
-  const initialData = [...data];
+export default function Chart({ arrayToSort, algorithm }) {
+  // const initialData = [...data];
   const chartReference = React.useRef();
+  const [data, setData] = React.useState([...arrayToSort]);
 
-  React.useEffect(() => {
-    console.log(chartReference);
-  }, []);
+  // React.useEffect(() => {
+  //   console.log(chartReference);
+  // }, []);
 
   // function run() {
   //   const iterator = sortAlgoritms[algorithm](data);
@@ -54,15 +55,16 @@ export default function Chart({ data, algorithm }) {
   }
 
   function resetMe() {
-    if (
-      !isEmpty(
-        chartReference?.current?.chartInstance?.config?.data?.datasets?.[0]
-          ?.data
-      )
-    ) {
-      chartReference.current.chartInstance.config.data.datasets[0].data = initialData;
-      chartReference.current.chartInstance.update();
-    }
+    // if (
+    //   !isEmpty(
+    //     chartReference?.current?.chartInstance?.config?.data?.datasets?.[0]
+    //       ?.data
+    //   )
+    // ) {
+    //   chartReference.current.chartInstance.config.data.datasets[0].data = initialData;
+    //   chartReference.current.chartInstance.update();
+    // }
+    setData([...arrayToSort]);
   }
 
   const options = {
@@ -127,6 +129,6 @@ export default function Chart({ data, algorithm }) {
 }
 
 Chart.propTypes = {
-  data: PropTypes.arrayOf(Number).isRequired,
+  arrayToSort: PropTypes.arrayOf(Number).isRequired,
   algorithm: PropTypes.string.isRequired,
 };

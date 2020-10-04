@@ -2,10 +2,9 @@
 
 /** *********************************
  * bubbleSort
- * @param {*} unsortedArray
+ * @param {*} arr
  */
 export async function bubbleSort({ arr, chart }) {
-  const chartInstance = chart;
   const len = arr.length;
 
   console.time('bubbleSort');
@@ -19,8 +18,8 @@ export async function bubbleSort({ arr, chart }) {
       }
 
       // console.log(i, j, arr);
-      chartInstance.config.data.datasets[0].data = arr;
-      chartInstance.update();
+      chart.config.data.datasets[0].data = arr;
+      chart.update();
       await sleep(2);
     }
   }
@@ -30,53 +29,10 @@ export async function bubbleSort({ arr, chart }) {
 }
 
 /** *********************************
- * mergeSort
- * @param {*} left
- * @param {*} right
- */
-function merge(left, right, chart) {
-  const chartInstance = chart;
-  const result = [];
-  const lLen = left.length;
-  const rLen = right.length;
-  let l = 0;
-  let r = 0;
-  while (l < lLen && r < rLen) {
-    if (left[l] < right[r]) {
-      result.push(left[l++]);
-    } else {
-      result.push(right[r++]);
-    }
-  }
-  // remaining part needs to be addred to the result
-  // return result.concat(left.slice(l)).concat(right.slice(r));
-  const endResult = result.concat(left.slice(l)).concat(right.slice(r));
-  chartInstance.config.data.datasets[0].data = endResult;
-  chartInstance.update();
-  return endResult;
-}
-
-export function mergeSort({ arr, chart }) {
-  const len = arr.length;
-  if (len < 2) return arr;
-  const mid = Math.floor(len / 2);
-  const left = arr.slice(0, mid);
-  const right = arr.slice(mid);
-  // send left and right to the mergeSort to broke it down into pieces
-  // then merge those
-  return merge(
-    mergeSort({ arr: left, chart }),
-    mergeSort({ arr: right, chart }),
-    chart
-  );
-}
-
-/** *********************************
  * insertionSort
- * @param {*} unsortedArray
+ * @param {*} arr
  */
 export async function insertionSort({ arr, chart }) {
-  const chartInstance = chart;
   const len = arr.length;
 
   console.time('insertionSort');
@@ -92,8 +48,8 @@ export async function insertionSort({ arr, chart }) {
       arr[j] = arr[j - 1];
       j -= 1;
       // console.log(i, j, arr);
-      chartInstance.config.data.datasets[0].data = arr;
-      chartInstance.update();
+      chart.config.data.datasets[0].data = arr;
+      chart.update();
       await sleep(2);
     }
 
@@ -106,11 +62,11 @@ export async function insertionSort({ arr, chart }) {
 }
 
 /** *********************************
- *
- * @param {selectionSort} unsortedArray
+ * selectionSort
+ * @param {Array} arr
+ * @param {Chart} chart
  */
 export async function selectionSort({ arr, chart }) {
-  const chartInstance = chart;
   const len = arr.length;
 
   console.time('selectionSort');
@@ -121,17 +77,54 @@ export async function selectionSort({ arr, chart }) {
       if (arr[j] < arr[minIdx]) {
         minIdx = j;
       }
+      chart.config.data.datasets[0].data = arr;
+      chart.update();
+      await sleep(2);
     }
     const temp = arr[i];
     arr[i] = arr[minIdx];
     arr[minIdx] = temp;
-    // yield arr;
-    chartInstance.config.data.datasets[0].data = arr;
-    chartInstance.update();
-    await sleep(2);
   }
   console.timeEnd('selectionSort');
   return arr;
+}
+
+/** *********************************
+ * mergeSort
+ * @param {Array} arr
+ * @param {Chart} chart
+ */
+async function merge(left, right, chart) {
+  const result = [];
+  const lLen = left.length;
+  const rLen = right.length;
+  let l = 0;
+  let r = 0;
+  while (l < lLen && r < rLen) {
+    if (left[l] < right[r]) {
+      result.push(left[l++]);
+    } else {
+      result.push(right[r++]);
+    }
+  }
+  // remaining part needs to be addred to the result
+  return result.concat(left.slice(l)).concat(right.slice(r));
+}
+
+export async function mergeSort({ arr, chart }) {
+  const len = arr.length;
+  if (len < 2) return arr;
+  const mid = Math.floor(len / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
+
+  // send left and right to the mergeSort to broke it down into pieces
+  // then merge those
+  return merge(
+    mergeSort({ arr: left, chart }),
+    mergeSort({ arr: right, chart }),
+    chart
+  );
 }
 
 /** *********************************
@@ -146,8 +139,7 @@ function swap(arr, i, j) {
   arr[j] = temp;
 }
 
-function partition(arr, pivot, left, right, chart) {
-  const chartInstance = chart;
+async function partition(arr, pivot, left, right, chart) {
   const pivotValue = arr[pivot];
   let partitionIndex = left;
 
@@ -156,15 +148,12 @@ function partition(arr, pivot, left, right, chart) {
       swap(arr, i, partitionIndex);
       partitionIndex += 1;
     }
-    chartInstance.config.data.datasets[0].data = arr;
-    chartInstance.update();
   }
   swap(arr, right, partitionIndex);
   return partitionIndex;
 }
 
 export function quickSort({ arr, left, right, chart }) {
-  // const len = arr.length;
   let pivot;
   let partitionIndex;
 
@@ -176,6 +165,8 @@ export function quickSort({ arr, left, right, chart }) {
     quickSort({ arr, left, right: partitionIndex - 1, chart });
     quickSort({ arr, left: partitionIndex + 1, right, chart });
   }
+  chart.config.data.datasets[0].data = arr;
+  chart.update();
   return arr;
 }
 

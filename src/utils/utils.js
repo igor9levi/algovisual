@@ -94,7 +94,7 @@ export async function selectionSort({ arr, chart }) {
  * @param {Array} arr
  * @param {Chart} chart
  */
-async function merge(left, right, chart) {
+function merge(left, right, chart) {
   const result = [];
   const lLen = left.length;
   const rLen = right.length;
@@ -108,10 +108,19 @@ async function merge(left, right, chart) {
     }
   }
   // remaining part needs to be addred to the result
-  return result.concat(left.slice(l)).concat(right.slice(r));
+  // return result.concat(left.slice(l)).concat(right.slice(r));
+  const endResult = result.concat(left.slice(l)).concat(right.slice(r));
+  setTimeout(() => {
+    chart.config.data.datasets[0].data = endResult;
+    chart.update();
+  }, 2);
+  // chart.config.data.datasets[0].data = endResult;
+  // chart.update();
+  // await sleep(2);
+  return endResult;
 }
 
-export async function mergeSort({ arr, chart }) {
+export function mergeSort({ arr, chart }) {
   const len = arr.length;
   if (len < 2) return arr;
   const mid = Math.floor(len / 2);

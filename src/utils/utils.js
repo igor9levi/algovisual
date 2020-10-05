@@ -20,7 +20,7 @@ export async function bubbleSort({ arr, chart }) {
       // console.log(i, j, arr);
       chart.config.data.datasets[0].data = arr;
       chart.update();
-      await sleep(2);
+      await sleep(0);
     }
   }
 
@@ -50,7 +50,7 @@ export async function insertionSort({ arr, chart }) {
       // console.log(i, j, arr);
       chart.config.data.datasets[0].data = arr;
       chart.update();
-      await sleep(2);
+      await sleep(0);
     }
 
     // moving current element to its  correct position.
@@ -79,7 +79,7 @@ export async function selectionSort({ arr, chart }) {
       }
       chart.config.data.datasets[0].data = arr;
       chart.update();
-      await sleep(2);
+      await sleep(0);
     }
     const temp = arr[i];
     arr[i] = arr[minIdx];
@@ -113,10 +113,10 @@ function merge(left, right, chart) {
   setTimeout(() => {
     chart.config.data.datasets[0].data = endResult;
     chart.update();
-  }, 2);
+  }, 0);
   // chart.config.data.datasets[0].data = endResult;
   // chart.update();
-  // await sleep(2);
+  // await sleep(0);
   return endResult;
 }
 
@@ -149,7 +149,7 @@ async function swap(arr, i, j, chart) {
 
   chart.config.data.datasets[0].data = arr;
   chart.update();
-  await sleep(2);
+  await sleep(0);
 }
 
 function partition(arr, pivot, left, right, chart) {

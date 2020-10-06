@@ -29,7 +29,7 @@ function App() {
         ))}
       </main>
       <button
-        className="btn-reset-all"
+        className="btn btn-reset-all"
         type="button"
         onClick={() => setData([...createArray()])}
       >

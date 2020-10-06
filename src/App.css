@@ -46,13 +46,25 @@
 
 .btn {
   margin: 10px;
-}
-
-.btn-reset-all {
   width: 70px;
   height: 30px;
   border-radius: 5px;
-  margin-top: 30px;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn-run {
+  background-color: rgb(168, 155, 241);
+}
+
+.btn-reset {
+  background-color: rgb(238, 179, 169);
+}
+
+.btn-reset-all {
+  margin-top: 50px;
   background-color: rgb(116, 219, 116);
   border-color: darkgreen;
 }

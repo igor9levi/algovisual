@@ -83,10 +83,14 @@ export default function Chart({ arrayToSort, algorithm }) {
         data={barData}
         options={options}
       />
-      <button className="btn" type="button" onClick={() => run()}>
+      <button className="btn btn-run" type="button" onClick={() => run()}>
         Run
       </button>
-      <button className="btn" type="button" onClick={() => resetMe(true)}>
+      <button
+        className="btn btn-reset"
+        type="button"
+        onClick={() => resetMe(true)}
+      >
         Reset
       </button>
     </div>

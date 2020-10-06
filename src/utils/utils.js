@@ -17,7 +17,7 @@ export async function bubbleSort({ arr, chart }) {
         arr[j] = temp;
       }
 
-      chart.config.data.datasets[0].data = arr;
+      chart.config.data.datasets[0].data = [...arr];
       chart.update();
       await sleep(0);
     }
@@ -47,7 +47,7 @@ export async function insertionSort({ arr, chart }) {
       arr[j] = arr[j - 1];
       j -= 1;
 
-      chart.config.data.datasets[0].data = arr;
+      chart.config.data.datasets[0].data = [...arr];
       chart.update();
       await sleep(0);
     }
@@ -76,13 +76,15 @@ export async function selectionSort({ arr, chart }) {
       if (arr[j] < arr[minIndex]) {
         minIndex = j;
       }
-      chart.config.data.datasets[0].data = arr;
-      chart.update();
-      await sleep(0);
     }
+
     const temp = arr[i];
     arr[i] = arr[minIndex];
     arr[minIndex] = temp;
+
+    chart.config.data.datasets[0].data = [...arr];
+    chart.update();
+    await sleep(100);
   }
   console.timeEnd('selectionSort');
   return arr;
@@ -95,10 +97,10 @@ export async function selectionSort({ arr, chart }) {
  */
 
 let animateArray = [];
-let cnt = 50;
+let mergeDelay = 50;
 
 function merge(left, right, chart) {
-  cnt += 50;
+  mergeDelay += 50;
   const result = [];
   const lLen = left.length;
   const rLen = right.length;
@@ -125,7 +127,7 @@ function merge(left, right, chart) {
   setTimeout(() => {
     chart.config.data.datasets[0].data = animated;
     chart.update();
-  }, cnt);
+  }, mergeDelay);
 
   return endResult;
 }
@@ -155,9 +157,9 @@ export function mergeSort({ arr, chart, rec }) {
  * @param {*} left
  * @param {*} right
  */
-let cn = 10;
+let quickDelay = 50;
 function swap(arr, i, j, chart) {
-  cn += cnt;
+  quickDelay += 50;
   const temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
@@ -167,7 +169,7 @@ function swap(arr, i, j, chart) {
   setTimeout(() => {
     chart.config.data.datasets[0].data = animated;
     chart.update();
-  }, cn);
+  }, quickDelay);
 }
 
 function partition(arr, pivot, left, right, chart) {

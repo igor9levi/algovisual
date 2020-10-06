@@ -17,7 +17,6 @@ export async function bubbleSort({ arr, chart }) {
         arr[j] = temp;
       }
 
-      // console.log(i, j, arr);
       chart.config.data.datasets[0].data = arr;
       chart.update();
       await sleep(0);
@@ -47,7 +46,7 @@ export async function insertionSort({ arr, chart }) {
       // moving the left side element to one position forward.
       arr[j] = arr[j - 1];
       j -= 1;
-      // console.log(i, j, arr);
+
       chart.config.data.datasets[0].data = arr;
       chart.update();
       await sleep(0);
@@ -72,18 +71,18 @@ export async function selectionSort({ arr, chart }) {
   console.time('selectionSort');
 
   for (let i = 0; i < len; i += 1) {
-    let minIdx = i;
+    let minIndex = i;
     for (let j = i + 1; j < len; j += 1) {
-      if (arr[j] < arr[minIdx]) {
-        minIdx = j;
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
       }
       chart.config.data.datasets[0].data = arr;
       chart.update();
       await sleep(0);
     }
     const temp = arr[i];
-    arr[i] = arr[minIdx];
-    arr[minIdx] = temp;
+    arr[i] = arr[minIndex];
+    arr[minIndex] = temp;
   }
   console.timeEnd('selectionSort');
   return arr;
@@ -94,44 +93,58 @@ export async function selectionSort({ arr, chart }) {
  * @param {Array} arr
  * @param {Chart} chart
  */
+
+let animateArray = [];
+let cnt = 50;
+
 function merge(left, right, chart) {
+  cnt += 50;
   const result = [];
   const lLen = left.length;
   const rLen = right.length;
   let l = 0;
   let r = 0;
+
   while (l < lLen && r < rLen) {
-    if (left[l] < right[r]) {
+    if (left[l].value < right[r].value) {
       result.push(left[l++]);
     } else {
       result.push(right[r++]);
     }
   }
   // remaining part needs to be addred to the result
-  // return result.concat(left.slice(l)).concat(right.slice(r));
   const endResult = result.concat(left.slice(l)).concat(right.slice(r));
+  const minIndex = Math.min(...endResult.map((el) => el.index));
+  endResult.forEach((el, index) => {
+    el.index = minIndex + index;
+    animateArray[el.index] = el.value;
+  });
+
+  const animated = [...animateArray];
+
   setTimeout(() => {
-    chart.config.data.datasets[0].data = endResult;
+    chart.config.data.datasets[0].data = animated;
     chart.update();
-  }, 0);
-  // chart.config.data.datasets[0].data = endResult;
-  // chart.update();
-  // await sleep(0);
+  }, cnt);
+
   return endResult;
 }
 
-export function mergeSort({ arr, chart }) {
+export function mergeSort({ arr, chart, rec }) {
+  if (!rec) {
+    animateArray = [...arr];
+    arr = arr.map((value, index) => ({ value, index }));
+  }
   const len = arr.length;
   if (len < 2) return arr;
   const mid = Math.floor(len / 2);
   const left = arr.slice(0, mid);
   const right = arr.slice(mid);
 
-  // send left and right to the mergeSort to broke it down into pieces
-  // then merge those
+  // send left and right to the mergeSort to broke it down into pieces then merge those
   return merge(
-    mergeSort({ arr: left, chart }),
-    mergeSort({ arr: right, chart }),
+    mergeSort({ arr: left, chart, rec: true }),
+    mergeSort({ arr: right, chart, rec: true }),
     chart
   );
 }
@@ -142,14 +155,19 @@ export function mergeSort({ arr, chart }) {
  * @param {*} left
  * @param {*} right
  */
-async function swap(arr, i, j, chart) {
+let cn = 10;
+function swap(arr, i, j, chart) {
+  cn += cnt;
   const temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
 
-  chart.config.data.datasets[0].data = arr;
-  chart.update();
-  await sleep(0);
+  const animated = [...arr];
+
+  setTimeout(() => {
+    chart.config.data.datasets[0].data = animated;
+    chart.update();
+  }, cn);
 }
 
 function partition(arr, pivot, left, right, chart) {

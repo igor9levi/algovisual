@@ -11,15 +11,12 @@ const algorthms = {
   quickSort: 'Quick Sort',
 };
 
-export default function Chart({ arrayToSort, algorithm }) {
+export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   const chartReference = React.useRef();
   const [data, setData] = React.useState([...arrayToSort]);
 
-  React.useEffect(() => {
-    setData([...arrayToSort]);
-  }, [arrayToSort]);
-
   function run() {
+    console.log('running');
     sortAlgoritms[algorithm]({
       arr: data,
       left: 0,
@@ -31,6 +28,14 @@ export default function Chart({ arrayToSort, algorithm }) {
   function resetMe() {
     setData([...arrayToSort]);
   }
+
+  React.useEffect(() => {
+    if (!shouldRun) setData([...arrayToSort]);
+  }, [arrayToSort]);
+
+  React.useEffect(() => {
+    if (shouldRun) run();
+  }, [shouldRun]);
 
   const options = {
     animation: {
@@ -100,4 +105,5 @@ export default function Chart({ arrayToSort, algorithm }) {
 Chart.propTypes = {
   arrayToSort: PropTypes.arrayOf(Number).isRequired,
   algorithm: PropTypes.string.isRequired,
+  shouldRun: PropTypes.bool.isRequired,
 };

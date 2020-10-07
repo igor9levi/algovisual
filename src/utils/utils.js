@@ -132,8 +132,9 @@ function merge(left, right, chart) {
   return endResult;
 }
 
-export function mergeSort({ arr, chart, rec }) {
-  if (!rec) {
+export function mergeSort({ arr, chart, beenHere }) {
+  if (!beenHere) {
+    mergeDelay = 50;
     animateArray = [...arr];
     arr = arr.map((value, index) => ({ value, index }));
   }
@@ -145,8 +146,8 @@ export function mergeSort({ arr, chart, rec }) {
 
   // send left and right to the mergeSort to broke it down into pieces then merge those
   return merge(
-    mergeSort({ arr: left, chart, rec: true }),
-    mergeSort({ arr: right, chart, rec: true }),
+    mergeSort({ arr: left, chart, beenHere: true }),
+    mergeSort({ arr: right, chart, beenHere: true }),
     chart
   );
 }
@@ -157,9 +158,9 @@ export function mergeSort({ arr, chart, rec }) {
  * @param {*} left
  * @param {*} right
  */
-let quickDelay = 50;
+let quickDelay = 25;
 function swap(arr, i, j, chart) {
-  quickDelay += 50;
+  quickDelay += 25;
   const temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
@@ -186,7 +187,10 @@ function partition(arr, pivot, left, right, chart) {
   return partitionIndex;
 }
 
-export function quickSort({ arr, left, right, chart }) {
+export function quickSort({ arr, left, right, chart, beenHere }) {
+  if (!beenHere) {
+    quickDelay = 25;
+  }
   let pivot;
   let partitionIndex;
 
@@ -195,8 +199,8 @@ export function quickSort({ arr, left, right, chart }) {
     partitionIndex = partition(arr, pivot, left, right, chart);
 
     // sort left and right
-    quickSort({ arr, left, right: partitionIndex - 1, chart });
-    quickSort({ arr, left: partitionIndex + 1, right, chart });
+    quickSort({ arr, left, right: partitionIndex - 1, chart, beenHere: true });
+    quickSort({ arr, left: partitionIndex + 1, right, chart, beenHere: true });
   }
 
   return arr;

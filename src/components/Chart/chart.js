@@ -16,7 +16,6 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   const [data, setData] = React.useState([...arrayToSort]);
 
   function run() {
-    console.log('running');
     sortAlgoritms[algorithm]({
       arr: data,
       left: 0,
@@ -30,12 +29,12 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   }
 
   React.useEffect(() => {
-    if (!shouldRun) setData([...arrayToSort]);
-  }, [arrayToSort]);
-
-  React.useEffect(() => {
-    if (shouldRun) run();
-  }, [shouldRun]);
+    if (shouldRun) {
+      run();
+    } else {
+      setData([...arrayToSort]);
+    }
+  }, [arrayToSort, shouldRun]);
 
   const options = {
     animation: {
@@ -82,12 +81,7 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
 
   return (
     <div className="chart">
-      <Bar
-        key={Math.random()}
-        ref={chartReference}
-        data={barData}
-        options={options}
-      />
+      <Bar ref={chartReference} data={barData} options={options} />
       <button className="btn btn-run" type="button" onClick={() => run()}>
         Run
       </button>

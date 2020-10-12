@@ -15,13 +15,22 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   const chartReference = React.useRef();
   const [data, setData] = React.useState([...arrayToSort]);
 
+  function updateChart(arr) {
+    if (!Array.isArray(arr)) return;
+    chartReference.current.chartInstance.config.data.datasets[0].data = [
+      ...arr,
+    ];
+    chartReference.current.chartInstance.update();
+  }
+
   function run() {
-    sortAlgoritms[algorithm]({
-      arr: data,
-      left: 0,
-      right: data.length - 1,
-      chart: chartReference.current.chartInstance,
-    });
+    const iterator = sortAlgoritms[algorithm](data);
+    const intervalId = setInterval(() => {
+      const { value, done } = iterator.next();
+      console.log('iteration -------------------------- ', value, done);
+      if (!done) updateChart(value);
+      else clearInterval(intervalId);
+    }, 100);
   }
 
   function resetMe() {
@@ -38,7 +47,7 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
 
   const options = {
     animation: {
-      easing: 'easeOutQuart',
+      easing: 'linear',
     },
     legend: {
       labels: {

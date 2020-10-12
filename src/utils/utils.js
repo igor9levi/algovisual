@@ -180,40 +180,40 @@ function partition(arr, pivot, left, right) {
   return partitionIndex;
 }
 
-export function* quickSort(arr, left = 0, right = arr.length - 1) {
-  let pivot;
-  let partitionIndex;
+// export function* quickSort(arr, left = 0, right = arr.length - 1) {
+//   let pivot;
+//   let partitionIndex;
 
-  if (left < right) {
-    pivot = right;
-    partitionIndex = yield* partition(arr, pivot, left, right);
+//   if (left < right) {
+//     pivot = right;
+//     partitionIndex = yield* partition(arr, pivot, left, right);
 
-    // sort left and right
-    console.log('left');
-    quickSort(arr, left, partitionIndex - 1);
-    console.log('right');
-    quickSort(arr, partitionIndex + 1, right);
-  }
-
-  console.log('retrunign arr');
-  return arr;
-}
-
-// export function* quickSort(array, min = 0, max = array.length) {
-//   if (max - min <= 1) return array; // base case
-
-//   // partitioning
-//   const [pivot, less, greater] = [array[min], [], []];
-//   for (let i = min + 1; i < max; i += 1) {
-//     if (array[i] < pivot) less.push(array[i]);
-//     else greater.push(array[i]);
-//     array.splice(min, i - min + 1, ...less.concat(pivot, greater));
-//     yield array;
+//     // sort left and right
+//     console.log('left');
+//     quickSort(arr, left, partitionIndex - 1);
+//     console.log('right');
+//     quickSort(arr, partitionIndex + 1, right);
 //   }
 
-//   yield* quickSort(array, min, min + less.length);
-//   yield* quickSort(array, min + less.length + 1, max);
+//   console.log('retrunign arr');
+//   return arr;
 // }
+
+export function* quickSort(array, min = 0, max = array.length) {
+  if (max - min <= 1) return array; // base case
+
+  // partitioning
+  const [pivot, less, greater] = [array[min], [], []];
+  for (let i = min + 1; i < max; i += 1) {
+    if (array[i] < pivot) less.push(array[i]);
+    else greater.push(array[i]);
+    array.splice(min, i - min + 1, ...less.concat(pivot, greater));
+    yield array;
+  }
+
+  yield* quickSort(array, min, min + less.length);
+  yield* quickSort(array, min + less.length + 1, max);
+}
 
 export const sleep = (milliseconds = 200) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));

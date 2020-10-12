@@ -4,7 +4,8 @@
  * bubbleSort
  * @param {*} arr
  */
-export function* bubbleSort(arr) {
+export function* bubbleSort(arrayToSort) {
+  const arr = [...arrayToSort];
   const len = arr.length;
 
   console.time('bubbleSort');
@@ -12,9 +13,8 @@ export function* bubbleSort(arr) {
   for (let i = len - 1; i >= 0; i -= 1) {
     for (let j = 1; j <= i; j += 1) {
       if (arr[j - 1] > arr[j]) {
-        const temp = arr[j - 1];
-        arr[j - 1] = arr[j];
-        arr[j] = temp;
+        // swap
+        [arr[j - 1], arr[j]] = [arr[j], arr[j - 1]];
       }
 
       yield arr;
@@ -28,7 +28,8 @@ export function* bubbleSort(arr) {
  * insertionSort
  * @param {*} arr
  */
-export function* insertionSort(arr) {
+export function* insertionSort(arrayToSort) {
+  const arr = [...arrayToSort];
   const len = arr.length;
 
   console.time('insertionSort');
@@ -58,7 +59,8 @@ export function* insertionSort(arr) {
  * @param {Array} arr
  * @param {Chart} chart
  */
-export function* selectionSort(arr) {
+export function* selectionSort(arrayToSort) {
+  const arr = [...arrayToSort];
   const len = arr.length;
 
   console.time('selectionSort');
@@ -71,10 +73,8 @@ export function* selectionSort(arr) {
       }
     }
 
-    // TODO: replace with switch
-    const temp = arr[i];
-    arr[i] = arr[minIndex];
-    arr[minIndex] = temp;
+    // swap
+    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
 
     yield arr;
   }
@@ -86,6 +86,139 @@ export function* selectionSort(arr) {
  * @param {Array} arr
  * @param {Chart} chart
  */
+
+// https://stackoverflow.com/questions/59443376/why-is-yield-keyword-not-producing-the-expected-generator-in-my-application
+export function* mergeSort(arr) {
+  if (arr.length > 1) {
+    const middle = Math.floor(arr.length / 2);
+    const lefthalf = arr.slice(0, middle);
+    const righthalf = arr.slice(middle);
+
+    yield* mergeSort(lefthalf);
+    yield* mergeSort(righthalf);
+
+    let i = 0;
+    let j = 0;
+    let k = 0;
+
+    while (i < lefthalf.length && j < righthalf.length) {
+      if (lefthalf[i] < righthalf[j]) {
+        arr[k] = lefthalf[i];
+        i += 1;
+      } else {
+        arr[k] = righthalf[j];
+        j += 1;
+      }
+
+      k += 1;
+    }
+
+    while (i < lefthalf.length) {
+      arr[k] = lefthalf[i];
+      i += 1;
+      k += 1;
+    }
+
+    while (j < righthalf.length) {
+      arr[k] = righthalf[j];
+      j += 1;
+      k += 1;
+    }
+
+    yield arr;
+  }
+}
+/*
+export function* mergeSort(arr) {
+  // arr is a unique list that all levels in the recursion tree can access:
+
+  function* mergeSortRec(start, end) {
+    // separate function that can take start/end indices
+    if (end - start > 1) {
+      const middle = Math.floor(start + end / 2);
+
+      yield* mergeSortRec(start, middle); // don't provide slice, but index range
+      yield* mergeSortRec(middle, end);
+      // const left = arr.slice(0, middle);
+      // const right = arr.slice(middle);
+      const left = arr.slice(start, middle);
+      const right = arr.slice(middle, end);
+      // left = arr[start:middle]
+      // right  = arr[middle:end]
+
+      let a = 0;
+      let b = 0;
+      let c = start;
+
+      while (a < left.length && b < right.length) {
+        if (left[a] < right[b]) {
+          arr[c] = left[a];
+          a += 1;
+        } else {
+          arr[c] = right[b];
+          b += 1;
+        }
+        c += 1;
+      }
+
+      while (a < left.length) {
+        arr[c] = left[a];
+        a += 1;
+        c += 1;
+      }
+
+      while (b < right.length) {
+        arr[c] = right[b];
+        b += 1;
+        c += 1;
+      }
+
+      yield arr;
+    }
+  }
+  yield* mergeSortRec(0, arr.length); // call inner function with start/end arguments
+}
+*/
+/*
+export function* mergeSort(array, leftIndex, rightIndex) {
+  const length = rightIndex - leftIndex;
+  if (length < 2) {
+    return array;
+  }
+  const mid = leftIndex + Math.floor(length / 2);
+
+  const left = mergeSort(array, leftIndex, mid);
+  // while (!left.next().done) yield array;
+  yield array;
+  const right = mergeSort(array, mid, rightIndex);
+  // while (!right.next().done) yield array;
+  yield array;
+  const merger = merge(array, leftIndex, mid, rightIndex);
+  // while (!merger.next().done) yield array;
+  yield array;
+}
+
+function* merge(array, leftIndex, mid, rightIndex) {
+  let result = [];
+  let l = leftIndex;
+  let r = mid;
+  while (l < mid && r < rightIndex) {
+    // if (hueFromHsl(array[l]) < hueFromHsl(array[r])) {
+    if (array[l] < array[r]) {
+      result.push(array[l++]);
+    } else {
+      result.push(array[r++]);
+    }
+  }
+  result = result
+    .concat(array.slice(l, mid))
+    .concat(array.slice(r, rightIndex));
+  for (let i = 0; i < rightIndex - leftIndex; i++) {
+    yield array;
+    array[leftIndex + i] = result[i];
+  }
+}
+*/
 
 // function merge(left, right) {
 //   const result = [];
@@ -109,6 +242,7 @@ export function* selectionSort(arr) {
 // }
 
 // export function* mergeSort(arr) {
+//   console.log(arr);
 //   const len = arr.length;
 
 //   if (len < 2) return arr;
@@ -119,35 +253,39 @@ export function* selectionSort(arr) {
 
 //   // send left and right to the mergeSort to broke it down into pieces then merge those
 //   // yield* merge(mergeSort(left), mergeSort(right));
+//   console.log(left, right);
 //   const lft = yield* mergeSort(left);
+//   console.log(left, right);
 //   const rght = yield* mergeSort(right);
-//   const result = yield merge(lft, rght);
-//   return result;
+//   console.log(lft, rght);
+//   yield merge(lft, rght);
+//   // const result = yield merge(lft, rght);
+//   // return result;
 // }
-function* merger(left, right) {
-  const arr = [];
+// function* merger(left, right) {
+//   const arr = [];
 
-  while (left.length && right.length) {
-    if (left[0] < right[0]) {
-      arr.push(left.shift());
-    } else {
-      arr.push(right.shift());
-    }
-  }
+//   while (left.length && right.length) {
+//     if (left[0] < right[0]) {
+//       arr.push(left.shift());
+//     } else {
+//       arr.push(right.shift());
+//     }
+//   }
 
-  yield [...arr, ...left, ...right];
-}
+//   yield [...arr, ...left, ...right];
+// }
 
-export function* mergeSort(array, half = array.length / 2) {
-  console.log(array);
-  if (array.length < 2) {
-    return array;
-  }
+// export function* mergeSort(array, half = array.length / 2) {
+//   console.log(array);
+//   if (array.length < 2) {
+//     return array;
+//   }
 
-  const left = array.splice(0, half); // left part of array
+//   const left = array.splice(0, half); // left part of array
 
-  yield* merger(mergeSort(left), mergeSort(array));
-}
+//   yield* merger(mergeSort(left), mergeSort(array));
+// }
 
 /** *********************************
  *  Quick Sort
@@ -155,30 +293,30 @@ export function* mergeSort(array, half = array.length / 2) {
  * @param {*} left
  * @param {*} right
  */
-function swap(arr, i, j) {
-  const temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
+// function swap(arr, i, j) {
+//   const temp = arr[i];
+//   arr[i] = arr[j];
+//   arr[j] = temp;
 
-  console.log('swapping');
-}
+//   console.log('swapping');
+// }
 
-function partition(arr, pivot, left, right) {
-  const pivotValue = arr[pivot];
-  let partitionIndex = left;
+// function partition(arr, pivot, left, right) {
+//   const pivotValue = arr[pivot];
+//   let partitionIndex = left;
 
-  for (let i = left; i < right; i += 1) {
-    if (arr[i] < pivotValue) {
-      console.log('partition 1', pivotValue);
-      swap(arr, i, partitionIndex);
-      partitionIndex += 1;
-    }
-  }
-  console.log('partition 2', pivotValue);
-  swap(arr, right, partitionIndex);
-  console.log('returning partitionIndex', partitionIndex);
-  return partitionIndex;
-}
+//   for (let i = left; i < right; i += 1) {
+//     if (arr[i] < pivotValue) {
+//       console.log('partition 1', pivotValue);
+//       swap(arr, i, partitionIndex);
+//       partitionIndex += 1;
+//     }
+//   }
+//   console.log('partition 2', pivotValue);
+//   swap(arr, right, partitionIndex);
+//   console.log('returning partitionIndex', partitionIndex);
+//   return partitionIndex;
+// }
 
 // export function* quickSort(arr, left = 0, right = arr.length - 1) {
 //   let pivot;
@@ -199,20 +337,22 @@ function partition(arr, pivot, left, right) {
 //   return arr;
 // }
 
+// https://www.samroelants.com/blog/recursive-generators-in-javascript/
 export function* quickSort(array, min = 0, max = array.length) {
   if (max - min <= 1) return array; // base case
 
   // partitioning
-  const [pivot, less, greater] = [array[min], [], []];
+  const [pivot, lesser, greater] = [array[min], [], []];
   for (let i = min + 1; i < max; i += 1) {
-    if (array[i] < pivot) less.push(array[i]);
+    if (array[i] < pivot) lesser.push(array[i]);
     else greater.push(array[i]);
-    array.splice(min, i - min + 1, ...less.concat(pivot, greater));
+    array.splice(min, i - min + 1, ...lesser.concat(pivot, greater));
     yield array;
   }
 
-  yield* quickSort(array, min, min + less.length);
-  yield* quickSort(array, min + less.length + 1, max);
+  yield* quickSort(array, min, min + lesser.length);
+  yield* quickSort(array, min + lesser.length + 1, max);
+  return array;
 }
 
 export const sleep = (milliseconds = 200) => {

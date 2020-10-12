@@ -27,7 +27,6 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
     const iterator = sortAlgoritms[algorithm](data);
     const intervalId = setInterval(() => {
       const { value, done } = iterator.next();
-      console.log('iteration -------------------------- ', value, done);
       if (!done) updateChart(value);
       else clearInterval(intervalId);
     }, 100);

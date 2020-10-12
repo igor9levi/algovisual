@@ -137,7 +137,7 @@ export function* mergeSort(arr) {
   function* mergeSortRec(start, end) {
     // separate function that can take start/end indices
     if (end - start > 1) {
-      const middle = Math.floor(start + end / 2);
+      const middle = Math.floor((start + end) / 2);
 
       yield* mergeSortRec(start, middle); // don't provide slice, but index range
       yield* mergeSortRec(middle, end);

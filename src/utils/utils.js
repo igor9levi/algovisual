@@ -87,47 +87,57 @@ export function* selectionSort(arrayToSort) {
 
 // https://stackoverflow.com/questions/59443376/why-is-yield-keyword-not-producing-the-expected-generator-in-my-application
 export function* mergeSort(arr) {
-  // TODO: revert to if (arr.length < 2) return arr
-  // if (arr.length > 1) {
-  if (arr.length < 2) return arr;
-  const middle = Math.floor(arr.length / 2);
-  const lefthalf = arr.slice(0, middle);
-  const righthalf = arr.slice(middle);
+  function* mergeSortRec(start, end) {
+    // TODO: revert to if (arr.length < 2) return arr
+    // if (arr.length > 1) {
+    // if (arr.length < 2) return arr;
+    if (end - start < 2) return arr;
+    // const middle = Math.floor(arr.length / 2);
+    const middle = Math.floor((end + start) / 2);
+    // const lefthalf = arr.slice(0, middle);
+    // const righthalf = arr.slice(middle);
+    const lefthalf = arr.slice(start, middle);
+    const righthalf = arr.slice(middle, end);
 
-  yield* mergeSort(lefthalf);
-  yield* mergeSort(righthalf);
+    // yield* mergeSortRec(lefthalf);
+    // yield* mergeSortRec(righthalf);
+    yield* mergeSortRec(start, middle);
+    yield* mergeSortRec(middle, end);
 
-  // let i = 0;
-  // let j = 0;
-  // let k = 0;
-  let [i, j, k] = [0, 0, 0];
+    // let i = 0;
+    // let j = 0;
+    // let k = 0;
+    // let [i, j, k] = [0, 0, 0];
+    let [i, j, k] = [0, 0, start];
 
-  while (i < lefthalf.length && j < righthalf.length) {
-    if (lefthalf[i] < righthalf[j]) {
-      arr[k] = lefthalf[i];
-      i += 1;
-    } else {
-      arr[k] = righthalf[j];
-      j += 1;
+    while (i < lefthalf.length && j < righthalf.length) {
+      if (lefthalf[i] < righthalf[j]) {
+        arr[k] = lefthalf[i];
+        i += 1;
+      } else {
+        arr[k] = righthalf[j];
+        j += 1;
+      }
+
+      k += 1;
     }
 
-    k += 1;
-  }
+    while (i < lefthalf.length) {
+      arr[k] = lefthalf[i];
+      i += 1;
+      k += 1;
+    }
 
-  while (i < lefthalf.length) {
-    arr[k] = lefthalf[i];
-    i += 1;
-    k += 1;
-  }
+    while (j < righthalf.length) {
+      arr[k] = righthalf[j];
+      j += 1;
+      k += 1;
+    }
 
-  while (j < righthalf.length) {
-    arr[k] = righthalf[j];
-    j += 1;
-    k += 1;
+    yield arr;
+    // }
   }
-
-  yield arr;
-  // }
+  yield* mergeSortRec(0, arr.length);
 }
 
 /** *********************************

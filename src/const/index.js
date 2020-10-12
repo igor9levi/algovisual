@@ -54,7 +54,7 @@ export default unsortedArray;
 // }
 
 /**
- * Quick Sort 2
+ * Merge Sort 1
  */
 // function merge(left, right) {
 //   const result = [];
@@ -98,6 +98,10 @@ export default unsortedArray;
 //   // const result = yield merge(lft, rght);
 //   // return result;
 // }
+
+/**
+ * Merge Sort 2
+ */
 // function* merger(left, right) {
 //   const arr = [];
 
@@ -124,7 +128,7 @@ export default unsortedArray;
 // }
 
 /**
- * Merge Sort 1
+ * Merge Sort 3
  */
 /*
 export function* mergeSort(arr) {
@@ -179,7 +183,7 @@ export function* mergeSort(arr) {
 */
 
 /**
- * Merge Sort 2
+ * Merge Sort 4
  */
 /*
 export function* mergeSort(array, leftIndex, rightIndex) {

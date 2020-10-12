@@ -24,12 +24,13 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   }
 
   function run() {
+    const delay = algorithm === 'quickSort' ? 10 : 100;
     const iterator = sortAlgoritms[algorithm](data);
     const intervalId = setInterval(() => {
       const { value, done } = iterator.next();
       if (!done) updateChart(value);
       else clearInterval(intervalId);
-    }, 100);
+    }, delay);
   }
 
   function resetMe() {

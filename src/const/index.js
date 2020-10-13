@@ -5,6 +5,10 @@ for (let i = 0; i < 50; i += 1) {
 }
 
 export default unsortedArray;
+// https://khan4019.github.io/front-end-Interview-Questions/sort.html
+// https://www.samroelants.com/blog/recursive-generators-in-javascript/
+// https://gist.github.com/greim/c0fff3eb8c48a2774aab
+// https://stackoverflow.com/questions/59443376/why-is-yield-keyword-not-producing-the-expected-generator-in-my-application
 
 /**
  * Quick Sort 1
@@ -225,3 +229,47 @@ function* merge(array, leftIndex, mid, rightIndex) {
   }
 }
 */
+
+/**
+ * Merge Sort 6
+ * https://jsfiddle.net/b9d0w58p/
+ */
+
+/*
+ function* mergeSort(array, leftIndex, rightIndex) {
+      length = rightIndex - leftIndex
+      if (length < 2) {
+        return array;
+      }
+      var mid = leftIndex + Math.floor(length / 2);
+
+      const left = mergeSort(array, leftIndex, mid)
+      while (!left.next().done)
+        yield array;
+      const right = mergeSort(array, mid, rightIndex)
+      while (!right.next().done)
+        yield array;
+      yield array;
+      const merger = merge(array, leftIndex, mid, rightIndex);
+      while(!merger.next().done)
+	      yield array;
+    }
+
+    function* merge(array, leftIndex, mid, rightIndex) {
+      var result = [];
+      var l = leftIndex,
+        r = mid;
+      while (l < mid && r < rightIndex) {
+        if (hueFromHsl(array[l]) < hueFromHsl(array[r])) {
+          result.push(array[l++]);
+        } else {
+          result.push(array[r++]);
+        }
+      }
+      result = result.concat(array.slice(l, mid)).concat(array.slice(r, rightIndex));
+      for (let i = 0; i < rightIndex - leftIndex; i++) {
+       yield array;
+        array[leftIndex + i] = result[i]
+      }
+    }
+    */

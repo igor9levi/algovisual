@@ -1,5 +1,3 @@
-// https://khan4019.github.io/front-end-Interview-Questions/sort.html
-
 /**
  * bubbleSort
  * @param {Array} arrayToSort
@@ -85,7 +83,6 @@ export function* selectionSort(arrayToSort) {
  * @param {Array} arr
  */
 
-// https://stackoverflow.com/questions/59443376/why-is-yield-keyword-not-producing-the-expected-generator-in-my-application
 export function* mergeSort(arrayToSort) {
   const arr = [...arrayToSort];
 
@@ -139,7 +136,6 @@ export function* mergeSort(arrayToSort) {
  * @param {Number} right
  */
 
-// https://www.samroelants.com/blog/recursive-generators-in-javascript/
 export function* quickSort(array, min = 0, max = array.length) {
   if (max - min <= 1) return array; // base case
 

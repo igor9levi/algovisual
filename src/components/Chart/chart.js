@@ -14,6 +14,7 @@ const algorthms = {
 export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   const chartReference = React.useRef();
   const [data, setData] = React.useState([...arrayToSort]);
+  const [intervalId, setIntervalId] = React.useState(null);
 
   function updateChart(arr) {
     if (!Array.isArray(arr)) return;
@@ -23,21 +24,40 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
     chartReference.current.chartInstance.update();
   }
 
+  function stopAnimation() {
+    clearInterval(intervalId);
+    setIntervalId(null);
+  }
+
+  function startAnimation(iterator, delay) {
+    const interval = setInterval(() => {
+      const { value, done } = iterator.next();
+
+      if (!done) {
+        updateChart(value);
+      } else {
+        stopAnimation();
+      }
+    }, delay);
+
+    setIntervalId(interval);
+  }
+
   function run() {
     const delay = algorithm === 'quickSort' ? 10 : 100;
     const iterator = sortAlgoritms[algorithm](data);
-    const intervalId = setInterval(() => {
-      const { value, done } = iterator.next();
-      if (!done) updateChart(value);
-      else clearInterval(intervalId);
-    }, delay);
+
+    stopAnimation();
+    startAnimation(iterator, delay);
   }
 
   function resetMe() {
+    stopAnimation();
     setData([...arrayToSort]);
   }
 
   React.useEffect(() => {
+    stopAnimation();
     if (shouldRun) {
       run();
     } else {
@@ -94,11 +114,7 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
       <button className="btn btn-run" type="button" onClick={() => run()}>
         Run
       </button>
-      <button
-        className="btn btn-reset"
-        type="button"
-        onClick={() => resetMe(true)}
-      >
+      <button className="btn btn-reset" type="button" onClick={() => resetMe()}>
         Reset
       </button>
     </div>

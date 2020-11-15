@@ -14,7 +14,7 @@ const algorthms = {
 export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   const chartReference = React.useRef();
   const [data, setData] = React.useState([...arrayToSort]);
-  // const [intervalId, setIntervalId] = React.useState(null);
+  const [intervalId, setIntervalId] = React.useState(null);
 
   function updateChart(arr) {
     if (!Array.isArray(arr)) return;
@@ -25,10 +25,14 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   }
 
   function stopAnimation(intervalId1) {
-    setTimeout(() => {
-      clearInterval(intervalId1);
-      // setIntervalId(null);
-    }, 1000);
+    if (intervalId1) {
+      setTimeout(() => {
+        clearInterval(intervalId);
+      }, 1000);
+    } else {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
   }
 
   function startAnimation(iterator, delay) {
@@ -38,11 +42,11 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
       if (!done) {
         updateChart(value);
       } else {
-        stopAnimation(interval);
+        stopAnimation(true);
       }
     }, delay);
 
-    // setIntervalId(interval);
+    setIntervalId(interval);
   }
 
   function run() {
@@ -111,15 +115,25 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
     ],
   };
 
+  const showButtons = false;
+
   return (
     <div className="chart">
       <Bar ref={chartReference} data={barData} options={options} />
-      <button className="btn btn-run" type="button" onClick={() => run()}>
-        Run
-      </button>
-      <button className="btn btn-reset" type="button" onClick={() => resetMe()}>
-        Reset
-      </button>
+      {showButtons && (
+        <>
+          <button className="btn btn-run" type="button" onClick={() => run()}>
+            Run
+          </button>
+          <button
+            className="btn btn-reset"
+            type="button"
+            onClick={() => resetMe()}
+          >
+            Reset
+          </button>
+        </>
+      )}
     </div>
   );
 }

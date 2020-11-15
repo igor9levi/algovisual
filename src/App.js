@@ -24,16 +24,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">Sorting algorithm comparison</header>
-      <main>
-        {algos.map((algo, index) => (
-          <Chart
-            key={index}
-            arrayToSort={data}
-            shouldRun={shouldRun}
-            algorithm={algo}
-          />
-        ))}
-      </main>
       <button
         className="btn btn-reset-all"
         type="button"
@@ -51,6 +41,16 @@ function App() {
       >
         Reset All
       </button>
+      <main>
+        {algos.map((algo, index) => (
+          <Chart
+            key={index}
+            arrayToSort={data}
+            shouldRun={shouldRun}
+            algorithm={algo}
+          />
+        ))}
+      </main>
     </div>
   );
 }

@@ -14,7 +14,7 @@ const algorthms = {
 export default function Chart({ arrayToSort, algorithm, shouldRun }) {
   const chartReference = React.useRef();
   const [data, setData] = React.useState([...arrayToSort]);
-  const [intervalId, setIntervalId] = React.useState(null);
+  // const [intervalId, setIntervalId] = React.useState(null);
 
   function updateChart(arr) {
     if (!Array.isArray(arr)) return;
@@ -24,9 +24,11 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
     chartReference.current.chartInstance.update();
   }
 
-  function stopAnimation() {
-    clearInterval(intervalId);
-    setIntervalId(null);
+  function stopAnimation(intervalId1) {
+    setTimeout(() => {
+      clearInterval(intervalId1);
+      // setIntervalId(null);
+    }, 1000);
   }
 
   function startAnimation(iterator, delay) {
@@ -36,15 +38,16 @@ export default function Chart({ arrayToSort, algorithm, shouldRun }) {
       if (!done) {
         updateChart(value);
       } else {
-        stopAnimation();
+        stopAnimation(interval);
       }
     }, delay);
 
-    setIntervalId(interval);
+    // setIntervalId(interval);
   }
 
   function run() {
-    const delay = algorithm === 'quickSort' ? 10 : 100;
+    const speedUpAlgo = ['quickSort', 'bubbleSort'];
+    const delay = speedUpAlgo.includes(algorithm) ? 10 : 100;
     const iterator = sortAlgoritms[algorithm](data);
 
     stopAnimation();
